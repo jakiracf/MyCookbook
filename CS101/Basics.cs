@@ -8,13 +8,14 @@ public class Basics
         return a + b;
         throw new NotImplementedException();
     }
-    public static string FormatTitle (string title)
+
+    public static string FormatTitle(string title)
     {
         if (string.IsNullOrEmpty(title))
         {
             return title;
         }
-        title=title.Trim().ToLower();
+        title = title.Trim().ToLower();
         return char.ToUpper(title[0]) + title.Substring(1);
 
         throw new NotImplementedException();

@@ -1,0 +1,16 @@
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\bin\Debug\net9.0\MyCookbook.Application.deps.json
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\bin\Debug\net9.0\MyCookbook.Application.dll
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\bin\Debug\net9.0\MyCookbook.Application.pdb
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\bin\Debug\net9.0\MyCookbook.Domain.dll
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\bin\Debug\net9.0\MyCookbook.Domain.pdb
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\MyCookbook.Application.csproj.AssemblyReference.cache
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\MyCookbook.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\MyCookbook.Application.AssemblyInfoInputs.cache
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\MyCookbook.Application.AssemblyInfo.cs
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\MyCookbook.Application.csproj.CoreCompileInputs.cache
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\MyCookbook.Application.sourcelink.json
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\MyCookbo.197DF0D0.Up2Date
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\MyCookbook.Application.dll
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\refint\MyCookbook.Application.dll
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\MyCookbook.Application.pdb
+C:\Users\Jakirac\Desktop\MyCookbook\src\Application\obj\Debug\net9.0\ref\MyCookbook.Application.dll

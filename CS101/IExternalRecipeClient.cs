@@ -2,5 +2,11 @@ using CS101;
 
 public interface IExternalRecipeClient
 {
-    Task<List<Recipe>> SearchAsync(string query);
+    // TODO-E7-1: add ct + paging + read-only list
+    Task<IReadOnlyList<Recipe>> SearchAsync(
+        string query,
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default
+    );
 }

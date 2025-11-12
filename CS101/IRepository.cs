@@ -1,6 +1,7 @@
 namespace CS101;
 
-interface IRepository<T> where T : Entity
+interface IRepository<T>
+    where T : Entity
 {
     List<T> List();
     T? GetById(Guid id);

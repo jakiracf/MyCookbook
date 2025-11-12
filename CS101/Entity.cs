@@ -10,5 +10,6 @@ public class Entity
         Id = Guid.NewGuid();
         CreatedAt = DateTime.UtcNow;
     }
+
     public virtual string Describe() => $"{Id} @ {CreatedAt:O}";
 }

@@ -9,13 +9,15 @@ namespace MyCookbook.Api.Controllers;
 public class ExternalRecipesController : ControllerBase
 {
     private readonly IExternalRecipeClient _client;
+
     public ExternalRecipesController(IExternalRecipeClient client) => _client = client;
 
     [HttpGet("search")]
     public async Task<IActionResult> Search([FromQuery] string query)
     {
         //add cancelation token after error fixes
-        if (string.IsNullOrWhiteSpace(query)) return BadRequest("query is required");
+        if (string.IsNullOrWhiteSpace(query))
+            return BadRequest("query is required");
         var results = await _client.SearchAsync(query);
         return Ok(results);
     }

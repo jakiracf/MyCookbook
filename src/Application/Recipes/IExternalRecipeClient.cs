@@ -2,12 +2,8 @@ namespace MyCookbook.Application.Recipes;
 
 public interface IExternalRecipeClient
 {
-    Task<IReadOnlyList<ExternalRecipeDto>> SearchAsync(
-        string query,
-        int page = 1,
-        int pageSize = 20,
-        CancellationToken cancellationToken = default
-    );
+        Task<IReadOnlyList<ExternalRecipeDto>> SearchAsync(string query, CancellationToken ct = default);
+
 
     public sealed record ExternalRecipeDto(
         string ExternalId,
@@ -16,5 +12,6 @@ public interface IExternalRecipeClient
         string? ImageUrl,
         IReadOnlyList<ExternalIngredient> Ingredients
     );
+
     public sealed record ExternalIngredient(string Name, string? Measure);
 }

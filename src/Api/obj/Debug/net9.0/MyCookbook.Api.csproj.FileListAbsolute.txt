@@ -13,6 +13,9 @@ C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\Microsoft.EntityFra
 C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\Microsoft.OpenApi.dll
 C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\Npgsql.dll
 C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\MyCookbook.Application.dll
 C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\MyCookbook.Domain.dll
 C:\Users\Jakirac\Desktop\MyCookbook\src\Api\bin\Debug\net9.0\MyCookbook.Infrastructure.dll

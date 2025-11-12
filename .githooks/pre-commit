@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "[pre-commit] restoring tools..."
+dotnet tool restore > /dev/null 2>&1 || true
+
+echo "[pre-commit] running CSharpier (local tool)..."
+# Try new CLI shape first, then older:
+dotnet tool run dotnet-csharpier -- write . \
+  || dotnet tool run dotnet-csharpier -- . \
+  || (echo "[pre-commit] CSharpier unavailable; falling back to dotnet format" && dotnet format)

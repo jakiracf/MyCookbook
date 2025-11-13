@@ -2,8 +2,9 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using myCookbook.Infrastructure.External.MealDb;
 using MyCookbook.Application.Recipes;
+using MyCookbook.Infrastructure.External.MealDb;
+//ide recommends static?? check why it works after dotnet restore
 using static MyCookbook.Application.Recipes.IExternalRecipeClient;
 
 namespace MyCookbook.Infrastructure.External.MealDb;
@@ -21,7 +22,10 @@ public sealed class MealDbClient : IExternalRecipeClient
         _log = log;
     }
 
-    public async Task<IReadOnlyList<ExternalRecipeDto>> SearchAsync(string query, CancellationToken ct = default)
+    public async Task<IReadOnlyList<ExternalRecipeDto>> SearchAsync(
+        string query,
+        CancellationToken ct = default
+    )
     {
         if (string.IsNullOrWhiteSpace(query))
             throw new ArgumentException("query is required", nameof(query));
@@ -45,7 +49,9 @@ public sealed class MealDbClient : IExternalRecipeClient
             }
 
             // 3) deserialize
-            var model = await resp.Content.ReadFromJsonAsync<MealDbSearchResponse>(cancellationToken: ct);
+            var model = await resp.Content.ReadFromJsonAsync<MealDbSearchResponse>(
+                cancellationToken: ct
+            );
             if (model?.Meals is null || model.Meals.Count == 0)
                 return Array.Empty<ExternalRecipeDto>();
 
@@ -54,16 +60,22 @@ public sealed class MealDbClient : IExternalRecipeClient
             foreach (var m in model.Meals)
             {
                 var ingredients = CollectIngredients(m);
-                results.Add(new ExternalRecipeDto(
-                    ExternalId: m.idMeal,
-                    Name: m.strMeal,
-                    Instructions: m.strInstructions,
-                    ImageUrl: m.strMealThumb,
-                    Ingredients: ingredients
-                ));
+                results.Add(
+                    new ExternalRecipeDto(
+                        ExternalId: m.idMeal,
+                        Name: m.strMeal,
+                        Instructions: m.strInstructions,
+                        ImageUrl: m.strMealThumb,
+                        Ingredients: ingredients
+                    )
+                );
             }
 
-            _log.LogInformation("MealDB returned {Count} results for '{Query}'", results.Count, query);
+            _log.LogInformation(
+                "MealDB returned {Count} results for '{Query}'",
+                results.Count,
+                query
+            );
             return results;
         }
         catch (TaskCanceledException) when (ct.IsCancellationRequested)
@@ -77,27 +89,32 @@ public sealed class MealDbClient : IExternalRecipeClient
             return Array.Empty<ExternalRecipeDto>();
         }
         catch (JsonException ex)
-    {
-        _log.LogWarning(ex, "MealDB JSON parse error for '{Query}'", query);
-        return Array.Empty<ExternalRecipeDto>();
-    }
-
+        {
+            _log.LogWarning(ex, "MealDB JSON parse error for '{Query}'", query);
+            return Array.Empty<ExternalRecipeDto>();
+        }
     }
 
     private static IReadOnlyList<ExternalIngredient> CollectIngredients(MealDbMeal m)
     {
         var list = new List<ExternalIngredient>(20);
         var extra = m.Extra;
-        if (extra is null) return list;
+        if (extra is null)
+            return list;
 
         for (int i = 1; i <= 20; i++)
         {
-            if (!extra.TryGetValue($"strIngredient{i}", out var ingEl)) continue;
+            if (!extra.TryGetValue($"strIngredient{i}", out var ingEl))
+                continue;
             var name = ingEl.ValueKind == JsonValueKind.String ? ingEl.GetString() : null;
-            if (string.IsNullOrWhiteSpace(name)) continue;
+            if (string.IsNullOrWhiteSpace(name))
+                continue;
 
             string? measure = null;
-            if (extra.TryGetValue($"strMeasure{i}", out var measEl) && measEl.ValueKind == JsonValueKind.String)
+            if (
+                extra.TryGetValue($"strMeasure{i}", out var measEl)
+                && measEl.ValueKind == JsonValueKind.String
+            )
             {
                 var raw = measEl.GetString();
                 measure = string.IsNullOrWhiteSpace(raw) ? null : raw!.Trim();

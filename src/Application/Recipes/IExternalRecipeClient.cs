@@ -2,8 +2,10 @@ namespace MyCookbook.Application.Recipes;
 
 public interface IExternalRecipeClient
 {
-        Task<IReadOnlyList<ExternalRecipeDto>> SearchAsync(string query, CancellationToken ct = default);
-
+    Task<IReadOnlyList<ExternalRecipeDto>> SearchAsync(
+        string query,
+        CancellationToken ct = default
+    );
 
     public sealed record ExternalRecipeDto(
         string ExternalId,

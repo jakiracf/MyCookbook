@@ -18,7 +18,7 @@ public sealed class MealDbMeal
     public string? strInstructions { get; set; }
     public string? strMealThumb { get; set; }
 
-    // Catch-all for all other properties from TheMealDB,(INGREDIENT-MEASURMENT pairs)
+    // Catch-all for all other properties from TheMealDB,(INGREDIENT-MEASURMENT pairs) --> DOCS!
     [JsonExtensionData]
-    public Dictionary<string, JsonElement>? Extra { get; set; }
+    public Dictionary<string, JsonElement>? Extra { get; set; } //not sure how this works, see docs
 }

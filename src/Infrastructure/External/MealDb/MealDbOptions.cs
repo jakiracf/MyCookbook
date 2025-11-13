@@ -1,4 +1,4 @@
-namespace myCookbook.Infrastructure.External.MealDb;
+namespace MyCookbook.Infrastructure.External.MealDb; //lowercase ahh </3
 
 public sealed class MealDbOptions
 {

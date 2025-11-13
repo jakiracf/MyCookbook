@@ -1,12 +1,14 @@
 using MyCookbook.Domain.Entities;
 
 namespace MyCookbook.Infrastructure.Persistence;
+
 //ai-generated seed for testing
 public static class DevSeeder
 {
     public static async Task SeedAsync(ApplicationDbContext db)
     {
-        if (db.Recipes.Any()) return;
+        if (db.Recipes.Any())
+            return;
 
         var r1 = Recipe.FromExternal(
             externalId: "52771",

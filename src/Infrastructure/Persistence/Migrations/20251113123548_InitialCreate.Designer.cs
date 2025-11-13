@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyCookbook.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251113104610_InitialCreate")]
+    [Migration("20251113123548_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

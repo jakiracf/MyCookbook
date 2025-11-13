@@ -3,7 +3,6 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyCookbook.Application.Recipes;
-using MyCookbook.Infrastructure.External.MealDb;
 //ide recommends static?? check why it works after dotnet restore
 using static MyCookbook.Application.Recipes.IExternalRecipeClient;
 
@@ -123,5 +122,51 @@ public sealed class MealDbClient : IExternalRecipeClient
             list.Add(new ExternalIngredient(name.Trim(), measure));
         }
         return list;
+    }
+    public async Task<ExternalRecipeDto?> GetByIdAsync(string externalId, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(externalId))
+            throw new ArgumentException("externalId is required", nameof(externalId));
+        var id = Uri.EscapeDataString(externalId.TrimEnd());
+        var url = $"{_opt.BaseUrl}/{_opt.ApiKey}/lookup.php?i={id}";
+        _log.LogInformation("MealDB: GET {Url}", url);
+
+        try
+        //reused
+        {
+            using var resp = await _http.GetAsync(url, ct);
+            if (!resp.IsSuccessStatusCode)
+            {
+                _log.LogWarning("MealDB non-success {Status} for {Url}", (int)resp.StatusCode, url);
+                return null;
+            }
+            var model = await resp.Content.ReadFromJsonAsync<MealDbSearchResponse>(cancellationToken: ct);
+            var meal = model?.Meals?.FirstOrDefault();
+            if (meal is null) return null;
+
+            var ingredients = CollectIngredients(meal);
+            return new ExternalRecipeDto(
+                ExternalId: meal.idMeal,
+                Name: meal.strMeal,
+                Instructions: meal.strInstructions,
+                ImageUrl: meal.strMealThumb,
+                Ingredients: ingredients
+            );
+        }
+        catch (TaskCanceledException) when (ct.IsCancellationRequested)
+        {
+            _log.LogWarning("MealDB cancelled for '{ExternalId}'", externalId);
+            return null;
+        }
+        catch (HttpRequestException ex)
+        {
+            _log.LogWarning(ex, "MealdbHttpRequestException for '{ExternalId}'", externalId);
+            return null;
+        }
+        catch (JsonException ex)
+        {
+            _log.LogWarning(ex, "MealDB JSON parse error for '{ExternalId}'", externalId);
+            return null;
+        }
     }
 }

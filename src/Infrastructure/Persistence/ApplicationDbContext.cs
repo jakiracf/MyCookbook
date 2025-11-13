@@ -5,7 +5,9 @@ namespace MyCookbook.Infrastructure.Persistence;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options) { }
+
     public DbSet<Recipe> Recipes => Set<Recipe>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,11 +1,11 @@
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using MyCookbook.Application;
 using MyCookbook.Application.Recipes;
 using MyCookbook.Domain.Entities;
 using MyCookbook.Infrastructure.Persistence;
-using MyCookbook.Application;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
-using System.Reflection.Metadata.Ecma335;
 using static MyCookbook.Application.Recipes.IExternalRecipeClient;
 
 namespace MyCookbook.Infrastructure.ApplicationServices;
@@ -17,13 +17,14 @@ public sealed class RecipeService : IRecipeService
     private readonly IExternalRecipeClient _external;
     private readonly AppOptions _app;
     private readonly IMemoryCache _cache;
+
     public RecipeService(ApplicationDbContext db, IExternalRecipeClient external)
     {
         _db = db;
         _external = external;
     }
 
-     private static string BuildSearchKey(string query)
+    private static string BuildSearchKey(string query)
     {
         return $"mealdb:search:{query.Trim().ToLowerInvariant()}"; //needs invariant
     }
@@ -37,41 +38,57 @@ public sealed class RecipeService : IRecipeService
             return Array.Empty<ExternalSearchResultDto>();
 
         var key = BuildSearchKey(query);
-        if(_cache.TryGetValue(key, out IReadOnlyList<ExternalSearchResultDto>? cached) && cached is not null)
+        if (
+            _cache.TryGetValue(key, out IReadOnlyList<ExternalSearchResultDto>? cached)
+            && cached is not null
+        )
             return cached;
 
         var hits = await _external.SearchAsync(query, ct);
         if (hits.Count == 0)
         {
-            _cache.Set(key, Array.Empty<ExternalSearchResultDto>(),
-            TimeSpan.FromSeconds(Math.Max(1, _app.Cache.ExternalSearchSeconds)));
+            _cache.Set(
+                key,
+                Array.Empty<ExternalSearchResultDto>(),
+                TimeSpan.FromSeconds(Math.Max(1, _app.Cache.ExternalSearchSeconds))
+            );
 
             return Array.Empty<ExternalSearchResultDto>();
         }
 
         var ids = hits.Select(h => h.ExternalId).ToArray();
-        var existingIds = await _db.Recipes
-            .AsNoTracking()
-            .Where(r => r.ExternalSource == SourceMealDb && r.ExternalId != null && ids.Contains(r.ExternalId))
+        var existingIds = await _db
+            .Recipes.AsNoTracking()
+            .Where(r =>
+                r.ExternalSource == SourceMealDb
+                && r.ExternalId != null
+                && ids.Contains(r.ExternalId)
+            )
             .Select(r => r.ExternalId!)
             .ToListAsync(ct);
 
-        var existingSet = existingIds.Count > 0 ? new HashSet<string>(existingIds) : new HashSet<string>();
+        var existingSet =
+            existingIds.Count > 0 ? new HashSet<string>(existingIds) : new HashSet<string>();
 
         var mapped = hits.Select(h => new ExternalSearchResultDto(
-            ExternalId: h.ExternalId,
-            Name: h.Name,
-            ImageUrl: h.ImageUrl,
-            IsSaved: existingSet.Contains(h.ExternalId)
-        )).ToList();
+                ExternalId: h.ExternalId,
+                Name: h.Name,
+                ImageUrl: h.ImageUrl,
+                IsSaved: existingSet.Contains(h.ExternalId)
+            ))
+            .ToList();
 
         //caching mapped results
-        _cache.Set(key, mapped, TimeSpan.FromSeconds(Math.Max(1, _app.Cache.ExternalSearchSeconds)));
+        _cache.Set(
+            key,
+            mapped,
+            TimeSpan.FromSeconds(Math.Max(1, _app.Cache.ExternalSearchSeconds))
+        );
 
         return mapped;
     }
 
-        public void InvalidateExternalSearchCache(string queryPrefix) //check later
+    public void InvalidateExternalSearchCache(string queryPrefix) //check later
     {
         var key = BuildSearchKey(queryPrefix);
         _cache.Remove(key);
@@ -122,8 +139,9 @@ public sealed class RecipeService : IRecipeService
 
     public void InvalidateExternalSearchCacheForImport(ExternalRecipeDto dto) //invalidates common search keys
     {
-        if (dto is null) return;
-            InvalidateExternalSearchCacheForImport(dto.Name, dto.ExternalId);
+        if (dto is null)
+            return;
+        InvalidateExternalSearchCacheForImport(dto.Name, dto.ExternalId);
     }
 
     private void InvalidateExternalSearchCacheForImport(string name, string? externalId)
@@ -138,8 +156,8 @@ public sealed class RecipeService : IRecipeService
                 _cache.Remove(BuildSearchKey(first));
 
             var compact = new string(n.Where(c => !char.IsWhiteSpace(c)).ToArray());
-                if(compact.Length > 0)
-                    _cache.Remove(BuildSearchKey(compact));
+            if (compact.Length > 0)
+                _cache.Remove(BuildSearchKey(compact));
         }
         if (!string.IsNullOrWhiteSpace(externalId))
         {
@@ -234,6 +252,7 @@ public sealed class RecipeService : IRecipeService
             r.UpdatedAt
         );
     }
+
     public RecipeService(
         ApplicationDbContext db,
         IExternalRecipeClient external,

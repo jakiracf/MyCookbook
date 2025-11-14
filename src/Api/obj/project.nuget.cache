@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qJSg1wT3x8A=",
+  "dgSpecHash": "iMl75Uew5XU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\api\\MyCookbook.Api.csproj",
+  "projectFilePath": "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\Api\\MyCookbook.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jakirac\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Jakirac\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",

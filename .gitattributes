@@ -1,6 +1,9 @@
-*.sh text eol=lf
-.githooks/* text eol=lf
-.githooks/* text eol=lf
-*.sh text eol=lf
-.githooks/* text eol=lf
-*.sh text eol=lf
+# Default all text to LF in the working tree
+* text=auto eol=lf
+
+# (Optional) keep Windows scripts CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Shell scripts must stay LF
+*.sh  text eol=lf

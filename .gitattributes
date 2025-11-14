@@ -1,9 +1,5 @@
-# Default all text to LF in the working tree
-* text=auto eol=lf
-
-# (Optional) keep Windows scripts CRLF
+*   text=auto eol=lf
+*.cs text eol=lf
+*.sh text eol=lf
 *.bat text eol=crlf
 *.cmd text eol=crlf
-
-# Shell scripts must stay LF
-*.sh  text eol=lf

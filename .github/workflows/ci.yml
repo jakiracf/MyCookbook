@@ -34,11 +34,11 @@ jobs:
               run: dotnet restore
 
             - name: CSharpier format --check
-              run: dotnet csharpier --check . 
+              run: dotnet csharpier --check .
 
             - name: Buld (Release)
-              run: dotnet build --no-resore -c Release
-            
+              run: dotnet build --no-restore -c Release
+
             - name: Test (Release)
               run: dotnet test --no-build -c Release
 

@@ -1,0 +1,99 @@
+################################################################################
+# OS cruft
+################################################################################
+.DS_Store
+Thumbs.db
+
+################################################################################
+# IDE / Editor
+################################################################################
+# VS Code: ignore everything except shared project settings (if you commit them)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# JetBrains / Rider
+.idea/
+
+# Visual Studio user files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ReSharper / Rider caches
+*_ReSharper*/
+*.DotSettings.user
+
+################################################################################
+# .NET build artifacts
+################################################################################
+**/bin/
+**/obj/
+**/out/
+artifacts/
+build/
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+################################################################################
+# Tests / Coverage
+################################################################################
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+
+################################################################################
+# Logs
+################################################################################
+*.log
+logs/
+
+################################################################################
+# ASP.NET / EF Core
+################################################################################
+# Keep EF Core migrations in source control:
+!**/Migrations/
+
+# But ignore any migrations generated under obj folders
+**/obj/**/Migrations/**/*
+
+################################################################################
+# Local configuration / secrets
+################################################################################
+# local overrides (keep environment-specific secrets out of git)
+*.local.json
+appsettings.*.local.json
+secrets.json
+.env
+.env.*
+
+################################################################################
+# CSharpier / formatting
+################################################################################
+.csharpiercache
+# (keep .csharpierignore if you add one)
+# .csharpierignore
+
+################################################################################
+# Frontend (future-proof)
+################################################################################
+node_modules/
+.npm/
+.yarn/
+.pnp.*
+dist/
+build/
+*.map
+
+################################################################################
+# Docker (optional; ignore local volumes/data folders if you create them)
+################################################################################
+*.pid
+docker-data/
+pgdata/

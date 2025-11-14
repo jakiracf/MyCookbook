@@ -1,5 +1,6 @@
 // src/Api/Program.cs
 using Microsoft.EntityFrameworkCore;
+using MyCookbook.Application;
 using MyCookbook.Application.Recipes;
 using MyCookbook.Infrastructure.ApplicationServices;
 using MyCookbook.Infrastructure.External.MealDb;
@@ -13,18 +14,25 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // TheMealDB options + typed HttpClient
-builder.Services.Configure<MealDbOptions>(
-builder.Configuration.GetSection("ExternalApis:MealDb"));
+builder.Services.Configure<MealDbOptions>(builder.Configuration.GetSection("ExternalApis:MealDb"));
 builder.Services.AddHttpClient<IExternalRecipeClient, MealDbClient>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.Configure<AppOptions>(builder.Configuration.GetSection("App"));
+builder.Services.AddMemoryCache();
 
 // DbContext (PostgreSQL) with transient fault handling
 var connStr = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
-    opt.UseNpgsql(connStr, npg => npg.EnableRetryOnFailure(
-        maxRetryCount: 5,
-        maxRetryDelay: TimeSpan.FromSeconds(2),
-        errorCodesToAdd: null)));
+    opt.UseNpgsql(
+        connStr,
+        npg =>
+            npg.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(2),
+                errorCodesToAdd: null
+            )
+    )
+);
 
 // CORS for local dev (open for demo)
 builder.Services.AddCors(p =>
@@ -59,15 +67,21 @@ using (var scope = app.Services.CreateScope())
                     await DevSeeder.SeedAsync(db);
                 }
 
-                log.LogInformation("Database migrated{Seed} successfully.",
-                    (seed is null || seed == true) ? " and seeded" : "");
+                log.LogInformation(
+                    "Database migrated{Seed} successfully.",
+                    (seed is null || seed == true) ? " and seeded" : ""
+                );
                 break;
             }
             catch (Exception ex) when (attempts++ < 6)
             {
                 var delay = TimeSpan.FromSeconds(Math.Min(30, Math.Pow(2, attempts))); // 2,4,8,16,30,30
-                log.LogWarning(ex, "DB not ready (attempt {Attempt}). Retrying in {Delay}s…",
-                    attempts, delay.TotalSeconds);
+                log.LogWarning(
+                    ex,
+                    "DB not ready (attempt {Attempt}). Retrying in {Delay}s…",
+                    attempts,
+                    delay.TotalSeconds
+                );
                 await Task.Delay(delay);
             }
         }
@@ -78,7 +92,10 @@ using (var scope = app.Services.CreateScope())
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var pending = await db.Database.GetPendingMigrationsAsync();
         if (pending.Any())
-            log.LogWarning("There are {Count} pending migrations. Apply them before production start.", pending.Count());
+            log.LogWarning(
+                "There are {Count} pending migrations. Apply them before production start.",
+                pending.Count()
+            );
     }
 }
 

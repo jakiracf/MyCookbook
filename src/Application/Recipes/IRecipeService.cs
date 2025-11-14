@@ -5,7 +5,10 @@ namespace MyCookbook.Application.Recipes;
 
 public interface IRecipeService
 {
-    Task<IReadOnlyList<ExternalSearchResultDto>> SearchExternalAsync(string query, CancellationToken ct=default);
+    Task<IReadOnlyList<ExternalSearchResultDto>> SearchExternalAsync(
+        string query,
+        CancellationToken ct = default
+    );
     Task<ImportResult> SaveFromExternalAsync(string externalId, CancellationToken ct = default);
     Task<Guid> CreateManualAsync(RecipeCreateDto dto, CancellationToken ct = default);
     Task<PagedResult<RecipeSummaryDto>> ListAsync(
@@ -31,10 +34,11 @@ public sealed record ExternalSearchResultDto(
     string? ImageUrl,
     bool IsSaved
 );
-public sealed record RecipeCreateDto(                    //img url validation ADDED
+
+public sealed record RecipeCreateDto( //img url validation ADDED
     [param: Required, MaxLength(200)] string Name,
     [param: Range(0, int.MaxValue)] int PrepMinutes,
-    [param: Url, MaxLength(500)] string? ImageUrl,    //crashes with 500, fix later
+    [param: Url, MaxLength(500)] string? ImageUrl, //crashes with 500, fix later
     [param: MaxLength(4000)] string? Instructions,
     IReadOnlyList<IngredientDto> Ingredients
 );
@@ -52,6 +56,7 @@ public sealed record RecipeSummaryDto(
     string? ImageUrl,
     DateTime CreatedAt
 );
+
 public sealed record RecipeDetailDto(
     Guid Id,
     string Name,
@@ -63,24 +68,17 @@ public sealed record RecipeDetailDto(
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );
-public sealed record PagedResult<T>(
-    IReadOnlyList<T> Items,
-    int Page,
-    int PageSize,
-    int TotalCount
-);
 
-public sealed record ImportResult(
-    Guid Id,
-    bool Created
-);
+public sealed record PagedResult<T>(IReadOnlyList<T> Items, int Page, int PageSize, int TotalCount);
+
+public sealed record ImportResult(Guid Id, bool Created);
 
 public enum RecipeSort
 {
-    CreatedAtDesc=0,
-    CreatedAtAsc=1,
-    PopularityDesc=2,
-    PopularityAsc=3,
-    NameDesc=4,
-    NameAsc=5
+    CreatedAtDesc = 0,
+    CreatedAtAsc = 1,
+    PopularityDesc = 2,
+    PopularityAsc = 3,
+    NameDesc = 4,
+    NameAsc = 5,
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\Api\\MyCookbook.Api.csproj": {}
+    "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\api\\MyCookbook.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\Api\\MyCookbook.Api.csproj": {
+    "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\api\\MyCookbook.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\Api\\MyCookbook.Api.csproj",
+        "projectUniqueName": "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\api\\MyCookbook.Api.csproj",
         "projectName": "MyCookbook.Api",
-        "projectPath": "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\Api\\MyCookbook.Api.csproj",
+        "projectPath": "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\api\\MyCookbook.Api.csproj",
         "packagesPath": "C:\\Users\\Jakirac\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\Api\\obj\\",
+        "outputPath": "C:\\Users\\Jakirac\\Desktop\\MyCookbook\\src\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Jakirac\\AppData\\Roaming\\NuGet\\NuGet.Config"

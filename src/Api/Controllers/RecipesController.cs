@@ -2,20 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using MyCookbook.Application.Recipes;
 
 namespace MyCookbook.Api.Controllers;
+
 //endpoints
 
 [ApiController]
 [Route("api/[controller]")]
-
 public class RecipesController : ControllerBase
 {
     private readonly IRecipeService _service;
     private readonly ILogger<RecipesController> _log;
+
     public RecipesController(IRecipeService service, ILogger<RecipesController> log)
     {
         _service = service;
         _log = log;
     }
+
     // Example: GET /api/recipes?page=1&pageSize=20&sort=CreatedAtDesc
     [HttpGet]
     [ProducesResponseType(typeof(PagedResult<RecipeSummaryDto>), StatusCodes.Status200OK)]
@@ -26,9 +28,9 @@ public class RecipesController : ControllerBase
         CancellationToken ct = default
     )
     {
-         //get pageSize from config instead of HC==1
-    var result = await _service.ListAsync(page, pageSize, sort, ct);
-    return Ok(result);
+        //get pageSize from config instead of HC==1
+        var result = await _service.ListAsync(page, pageSize, sort, ct);
+        return Ok(result);
     }
 
     [HttpPost]
@@ -38,10 +40,10 @@ public class RecipesController : ControllerBase
         CancellationToken ct = default
     )
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
             return ValidationProblem(ModelState);
         var id = await _service.CreateManualAsync(dto, ct);
-        return CreatedAtAction(nameof(GetById), new { id }, new{ id });
+        return CreatedAtAction(nameof(GetById), new { id }, new { id });
     }
 
     [HttpGet("{id:guid}")]
@@ -54,6 +56,7 @@ public class RecipesController : ControllerBase
             return NotFound();
         return Ok(recipe);
     }
+
     [HttpGet("search")]
     [ProducesResponseType(typeof(IReadOnlyList<ExternalSearchResultDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<ExternalSearchResultDto>>> Search(
@@ -61,11 +64,12 @@ public class RecipesController : ControllerBase
         CancellationToken ct = default
     )
     {
-        if(string.IsNullOrEmpty(query))
+        if (string.IsNullOrEmpty(query))
             return BadRequest("query is required");
         var results = await _service.SearchExternalAsync(query, ct);
         return Ok(results);
     }
+
     [HttpPost("from-external")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -75,13 +79,17 @@ public class RecipesController : ControllerBase
         CancellationToken ct = default
     )
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
             return ValidationProblem(ModelState);
         try
         {
             var result = await _service.SaveFromExternalAsync(body.ExternalId, ct);
-            if(result.Created)
-                return CreatedAtAction(nameof(GetById), new { id = result.Id }, new{ id = result.Id  });
+            if (result.Created)
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = result.Id },
+                    new { id = result.Id }
+                );
             return Ok(new { id = result.Id });
         }
         catch (KeyNotFoundException ex)
@@ -90,5 +98,8 @@ public class RecipesController : ControllerBase
             return NotFound(new { message = ex.Message });
         }
     }
-    public sealed record ImportFromExternalRequest([param: System.ComponentModel.DataAnnotations.Required] string ExternalId);
+
+    public sealed record ImportFromExternalRequest(
+        [param: System.ComponentModel.DataAnnotations.Required] string ExternalId
+    );
 }

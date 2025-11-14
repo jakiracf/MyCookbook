@@ -27,7 +27,8 @@ public class Recipe
         int prepMinutes,
         string? instructions,
         string? imageUrl,
-        IEnumerable<RecipeIngredient> ingredients)
+        IEnumerable<RecipeIngredient> ingredients
+    )
     {
         name = (name ?? string.Empty).Trim();
         if (name.Length == 0 || name.Length > 200)
@@ -172,5 +173,4 @@ public class RecipeIngredient
             throw new ArgumentOutOfRangeException(nameof(name), "name must be 1..200 chars");
         Measure = string.IsNullOrWhiteSpace(measure) ? null : measure.Trim();
     }
-
 }

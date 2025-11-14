@@ -123,7 +123,11 @@ public sealed class MealDbClient : IExternalRecipeClient
         }
         return list;
     }
-    public async Task<ExternalRecipeDto?> GetByIdAsync(string externalId, CancellationToken ct = default)
+
+    public async Task<ExternalRecipeDto?> GetByIdAsync(
+        string externalId,
+        CancellationToken ct = default
+    )
     {
         if (string.IsNullOrWhiteSpace(externalId))
             throw new ArgumentException("externalId is required", nameof(externalId));
@@ -140,9 +144,12 @@ public sealed class MealDbClient : IExternalRecipeClient
                 _log.LogWarning("MealDB non-success {Status} for {Url}", (int)resp.StatusCode, url);
                 return null;
             }
-            var model = await resp.Content.ReadFromJsonAsync<MealDbSearchResponse>(cancellationToken: ct);
+            var model = await resp.Content.ReadFromJsonAsync<MealDbSearchResponse>(
+                cancellationToken: ct
+            );
             var meal = model?.Meals?.FirstOrDefault();
-            if (meal is null) return null;
+            if (meal is null)
+                return null;
 
             var ingredients = CollectIngredients(meal);
             return new ExternalRecipeDto(

@@ -1,4 +1,4 @@
-﻿namespace MyCookbook.Tests;
+namespace MyCookbook.Tests;
 
 public class UnitTest1
 {

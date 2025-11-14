@@ -1,0 +1,58 @@
+name: CI
+
+on:
+    push:
+        branches: ["main", "test"]
+    pull_request:
+        branches: ["main", test"]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 8.0.x
+            - name: Cache NuGet
+              uses: actions/cache@v4
+              with:
+                  path: ~/.nuget/packages
+                  key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+                  restore-keys: |
+                      ${{ runner.os }}-nuget-
+
+            - name: Restore tools
+              run: dotnet tool restore
+
+            - name: Restore
+              run: dotnet restore
+
+            - name: CSharpier format --check
+              run: dotnet csharpier --check . 
+
+            - name: Buld (Release)
+              run: dotnet build --no-resore -c Release
+            
+            - name: Test (Release)
+              run: dotnet test --no-build -c Release
+
+            - name: Generate EF migration script (idempotent)
+              run: >
+                dotnet ef migrations script
+                --idempotent
+                --project src/Infrastructure
+                --startup-project src/Api
+                -o build/migrations.sql
+
+            - name: Upload migration script artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: migrations
+                  path: build/migrations.sql
+                  if-no-files-found: warn

@@ -29,7 +29,7 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
 
         b.HasIndex(x => x.Name);
 
-        // Owned collection → separate table recipe_ingredients
+        // Owned collection Ã¢â€ â€™ separate table recipe_ingredients
         b.OwnsMany(
             x => x.Ingredients,
             nb =>

@@ -1,3 +1,3 @@
-﻿namespace MyCookbook.Domain;
+namespace MyCookbook.Domain;
 
 public class Class1 { }

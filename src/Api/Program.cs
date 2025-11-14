@@ -78,7 +78,7 @@ using (var scope = app.Services.CreateScope())
                 var delay = TimeSpan.FromSeconds(Math.Min(30, Math.Pow(2, attempts))); // 2,4,8,16,30,30
                 log.LogWarning(
                     ex,
-                    "DB not ready (attempt {Attempt}). Retrying in {Delay}s…",
+                    "DB not ready (attempt {Attempt}). Retrying in {Delay}sÃ¢â‚¬Â¦",
                     attempts,
                     delay.TotalSeconds
                 );

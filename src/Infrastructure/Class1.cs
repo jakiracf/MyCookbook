@@ -1,3 +1,3 @@
-﻿namespace MyCookbook.Infrastructure;
+namespace MyCookbook.Infrastructure;
 
 public class Class1 { }

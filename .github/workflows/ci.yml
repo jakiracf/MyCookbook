@@ -37,7 +37,7 @@ jobs:
               run: dotnet csharpier --check .
 
             - name: Buld (Release)
-              run: dotnet build --no-restore -c Release
+              run: dotnet build --no-restore --no-build -c Release --logger "trx;LogFileName=tests.trx"
 
             - name: Test (Release)
               run: dotnet test --no-build -c Release
@@ -56,3 +56,10 @@ jobs:
                   name: migrations
                   path: build/migrations.sql
                   if-no-files-found: warn
+
+            - name: Upload test results
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                name: test-results
+                path: '**/*.trx'

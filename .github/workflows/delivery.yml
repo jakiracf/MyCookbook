@@ -7,9 +7,6 @@ on:
         types: [published]
     workflow_dispatch:
 
-env:
-    IMAGE_NAME: ghcr.io/${{github.repository}}/api
-
 jobs:
     build-and-publish:
         runs-on: ubuntu-latest
@@ -44,6 +41,14 @@ jobs:
                     echo "ref_tag=" >> $GITHUB_OUTPUT
                 fi
 
+            - name: Compute image name (lowercase)
+              id: img
+              shell: bash
+              run: |
+                # Lowercase owner/repo using bash expansion
+                REPO_LC="${GITHUB_REPOSITORY,,}"
+                echo "name=ghcr.io/${REPO_LC}/api" >> "$GITHUB_OUTPUT"
+
             - name: Build & push image
               uses: docker/build-push-action@v6
               with:
@@ -51,8 +56,8 @@ jobs:
                 file: ./Dockerfile
                 push: true
                 tags: |
-                  ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_tag }}
-                  ${{ steps.vars.outputs.ref_tag && format('{0}:{1}', env.IMAGE_NAME, steps.vars.outputs.ref_tag) || '' }}
+                  ${{ steps.img.outputs.name }}:${{ steps.vars.outputs.sha_tag }}
+                  ${{ steps.vars.outputs.ref_tag && format('{0}:{1}', steps.img.outputs.name, steps.vars.outputs.ref_tag) || '' }}
                 labels: |
                   org.opencontainers.image.source=${{ github.repository }}
                   org.opencontainers.image.revision=${{ github.sha }}

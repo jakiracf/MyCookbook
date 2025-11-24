@@ -37,7 +37,7 @@ jobs:
               run: dotnet csharpier --check .
 
             - name: Buld (Release)
-              run: dotnet build --no-restore -c Release --logger "trx;LogFileName=tests.trx"
+              run: dotnet build --no-restore -c Release -bl:build/build.binlog
 
             - name: Test (Release)
               run: dotnet test -c Release

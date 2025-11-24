@@ -40,7 +40,10 @@ jobs:
               run: dotnet build --no-restore -c Release -bl:build/build.binlog
 
             - name: Test (Release)
-              run: dotnet test -c Release
+              run: >
+                    dotnet test --no-build -c Release
+                    --logger "trx;LogFileName=tests.trx"
+                    --results-directory build/TestResults
 
             - name: Generate EF migration script (idempotent)
               run: >
@@ -62,4 +65,4 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: test-results
-                path: '**/*.trx'
+                path: build/TestResults

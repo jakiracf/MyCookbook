@@ -1,0 +1,89 @@
+name: CD (delivery only)
+
+on:
+    push:
+        branches: ["main", "test"]
+    release:
+        types: [published]
+    workflow_dispatch:
+
+jobs:
+    build-and-publish:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "8.0.x"
+
+            - name: Login to GHCR
+              uses: docker/login-action@v3
+              with:
+                registry: ghcr.io
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Extract version/tag
+              id: vars
+              run: |
+                echo "sha_tag=sha-${GITHUB_SHA}" >> $GITHUB_OUTPUT
+                if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+                    echo "ref_tag=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+                elif [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+                    echo "ref_tag=latest" >> $GITHUB_OUTPUT
+                else
+                    echo "ref_tag=" >> $GITHUB_OUTPUT
+                fi
+
+            - name: Compute image name (lowercase)
+              id: img
+              shell: bash
+              run: |
+                # Lowercase owner/repo using bash expansion
+                REPO_LC="${GITHUB_REPOSITORY,,}"
+                echo "name=ghcr.io/${REPO_LC}/api" >> "$GITHUB_OUTPUT"
+
+            - name: Build & push image
+              uses: docker/build-push-action@v6
+              with:
+                context: .
+                file: ./Dockerfile
+                push: true
+                tags: |
+                  ${{ steps.img.outputs.name }}:${{ steps.vars.outputs.sha_tag }}
+                  ${{ steps.vars.outputs.ref_tag && format('{0}:{1}', steps.img.outputs.name, steps.vars.outputs.ref_tag) || '' }}
+                labels: |
+                  org.opencontainers.image.source=${{ github.repository }}
+                  org.opencontainers.image.revision=${{ github.sha }}
+
+            - name: Restore tools (csharpier, dotnet-ef)
+              run: dotnet tool restore
+            - name: Restore
+              run: dotnet restore
+            - name: Build (Release)
+              run: dotnet build --no-restore -c Release
+            - name: Publish API (Self-contained)
+              run: dotnet publish ./src/Api/MyCookbook.Api.csproj -c Release -o build/publish /p:UseAppHost=false
+            - name: Generate EF SQL (idempotent)
+              run: >
+                dotnet ef migrations script
+                --idempotent
+                --project src/Infrastructure
+                --startup-project src/Api
+                -o build/migrations.sql
+            - name: Upload publish artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: api-publish
+                path: build/publish
+            - name: Upload EF SQL artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: migrations-sql
+                path: build/migrations.sql

@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc;
 using MyCookbook.Application.Recipes;
 
@@ -13,7 +12,10 @@ public class ExternalRecipesController : ControllerBase
     public ExternalRecipesController(IExternalRecipeClient client) => _client = client;
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string query, CancellationToken ct = default)
+    public async Task<IActionResult> Search(
+        [FromQuery] string query,
+        CancellationToken ct = default
+    )
     {
         //add<ed> cancelation token after error fixes
         if (string.IsNullOrWhiteSpace(query))

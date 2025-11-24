@@ -1,5 +1,13 @@
 root = true
 
+# Global defaults for all text files
+[*]
+end_of_line = lf
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# --- your existing C# rules ---
 [*.{cs,csx}]
 # C# language level & nullability
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
@@ -22,7 +30,3 @@ dotnet_naming_symbols.private_fields.applicable_kinds = field
 dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 dotnet_naming_style.underscore_camel.required_prefix = _
 dotnet_naming_style.underscore_camel.capitalization = camel_case
-
-# files end with newline; trim trailing whitespace
-insert_final_newline = true
-trim_trailing_whitespace = true

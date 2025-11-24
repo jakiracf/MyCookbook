@@ -37,10 +37,10 @@ jobs:
               run: dotnet csharpier --check .
 
             - name: Buld (Release)
-              run: dotnet build --no-restore --no-build -c Release --logger "trx;LogFileName=tests.trx"
+              run: dotnet build --no-restore -c Release --logger "trx;LogFileName=tests.trx"
 
             - name: Test (Release)
-              run: dotnet test --no-build -c Release
+              run: dotnet test -c Release
 
             - name: Generate EF migration script (idempotent)
               run: >
